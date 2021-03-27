@@ -1,0 +1,93 @@
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container">
+            <section class="page-section bg-primary card">
+                <div class="container">
+                    <div class="row justify-content-around">
+                        <div class="col-lg-12 text-center">
+                            <h2 class="text-white mt-0">Những người bạn có thể quen!</h2>
+                            <hr class="divider light my-4">
+                            <p class="text-white-50 mb-4">Kết nối thành công những người độc thân Việt Nam khác nhau với
+                                những
+                                câu chuyện lý tưởng cho tình yêu,
+                                hẹn hò, mối quan hệ lâu dài hoặc tình bạn.
+                                Bạn có thể sẽ tìm thấy những người độc thân đủ điều kiện ở mọi lứa tuổi đang tìm kiếm
+                                một mối
+                                quan hệ nghiêm túc.</p>
+
+                            <div class="row">
+                                {{#each users}}
+                                <div class="col-lg-4 col-md-6 mb-4">
+                                    <div class="card h-100">
+                                        <a href="#"><img class="card-img-top hover-shadow" src="{{this.image}}"
+                                                alt=""></a>
+                                        <div class="card-body">
+                                            <h4 class="card-title">
+                                                <a href="#">{{this.name}}</a>
+                                            </h4>
+                                            <h5>{{this.birthday}}</h5>
+                                            <p class="card-text">{{this.description}}</p>
+                                        </div>
+                                        <div class="card-footer">
+                                            <a class="btn btn-primary mx-4" href="/users/{{this._id}}/edit"
+                                                role="button">Cập nhật</a>
+                                            <a class="btn btn-secondary mx-4" href="#" role="button" data-toggle="modal"
+                                                data-target="#exampleModal" data-id="{{this._id}}">Xóa</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{/each}}
+
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Xóa người dùng!</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Bạn chắc chắn muốn xóa người dùng này chứ?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Hủy</button>
+                                        <button id="btn-delete-user" type="button" class="btn btn-primary">Xác nhận</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        </section>
+</div>
+</main>
+
+{{!-- Delete hidden form --}}
+<form name="delete-user-form" method="POST"></form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        var userID;
+        var deleteForm = document.forms['delete-user-form'];
+        var btnDeleteUser = document.getElementById('btn-delete-user');
+
+        $('#exampleModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            userID = button.data('id');
+        })
+
+        btnDeleteUser.onclick = function() {
+            deleteForm.action = '/users/' + userID + '?_method=DELETE';
+            deleteForm.submit();
+        }
+    });
+</script>
