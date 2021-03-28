@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 async function connect() {
     try {
-        await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/match_dev', {
+        await mongoose.connect('mongodb+srv://admin:admin@cluster0.ala8n.mongodb.net/myFirstDatabase?retryWrites=true&w=majority' || 'mongodb://localhost:27017/match_dev', {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useFindAndModify: false,
@@ -11,7 +11,6 @@ async function connect() {
         console.log('Connect Successfully!!!');
     } catch (error) {
         console.log('Connect Failure!!!');
-        console.log(process.env.MONGODB_URI);
     }
 }
 
