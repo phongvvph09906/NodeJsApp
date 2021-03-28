@@ -10,13 +10,7 @@ class SiteController {
 
     // [GET] /
     index(req, res, next) {
-        User.find({})
-            .then(users => {
-                res.render('home', {
-                    layout: false,
-                    users: multipleMongooseToObject(users) })
-            })
-            .catch(next);
+        res.render('home', { layout: false });
     }
 }
 
