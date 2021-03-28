@@ -37,7 +37,7 @@ class UsersController {
     store(req, res, next) {
         const user = new User(req.body);
         user.save()
-            .then(() => res.redirect('/'))
+            .then(() => res.redirect('/users'))
             .catch(error => {
                 
             });
