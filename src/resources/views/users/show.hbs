@@ -19,8 +19,11 @@
                                 {{#each users}}
                                 <div class="col-lg-4 col-md-6 mb-4">
                                     <div class="card h-100">
-                                        <a href="#"><img class="card-img-top hover-shadow" src="{{this.image}}"
+                                        {{#each this.image}}
+                                        <a href="#"><img class="card-img-top hover-shadow" src="{{this}}"
                                                 alt=""></a>
+                                        {{/each}}
+
                                         <div class="card-body">
                                             <h4 class="card-title">
                                                 <a href="#">{{this.name}}</a>
@@ -58,7 +61,8 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
                                             data-dismiss="modal">Hủy</button>
-                                        <button id="btn-delete-user" type="button" class="btn btn-primary">Xác nhận</button>
+                                        <button id="btn-delete-user" type="button" class="btn btn-primary">Xác
+                                            nhận</button>
                                     </div>
                                 </div>
                             </div>
@@ -74,7 +78,7 @@
 <form name="delete-user-form" method="POST"></form>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
 
         var userID;
         var deleteForm = document.forms['delete-user-form'];
@@ -85,9 +89,10 @@
             userID = button.data('id');
         })
 
-        btnDeleteUser.onclick = function() {
+        btnDeleteUser.onclick = function () {
             deleteForm.action = '/users/' + userID + '?_method=DELETE';
             deleteForm.submit();
         }
+        $('.carousel').carousel();
     });
 </script>

@@ -7693,18 +7693,7 @@ hr.light {
   #mainNav .navbar-nav .nav-item .nav-link:hover {
     color: #fff; }
   #mainNav .navbar-nav .nav-item:last-child .nav-link {
-    padding-right: 0; }
-  #mainNav.navbar-scrolled {
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    background-color: #fff; }
-  #mainNav.navbar-scrolled .navbar-brand {
-    color: #212529; }
-  #mainNav.navbar-scrolled .navbar-brand:hover {
-    color: #f4623a; }
-  #mainNav.navbar-scrolled .navbar-nav .nav-item .nav-link {
-    color: #212529; }
-  #mainNav.navbar-scrolled .navbar-nav .nav-item .nav-link:hover {
-    color: #f4623a; } }
+    padding-right: 0; } }
 
 section.masthead {
   padding-top: 10rem;
@@ -7770,3 +7759,32 @@ section.masthead h1 {
 
 .text-white-75 {
   color: rgba(255, 255, 255, 0.75); }
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto; }
+
+.form-signin .checkbox {
+  font-weight: 400; }
+
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px; }
+
+.form-signin .form-control:focus {
+  z-index: 2; }
+
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0; }
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0; }

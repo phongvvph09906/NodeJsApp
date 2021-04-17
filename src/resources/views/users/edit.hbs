@@ -1,27 +1,23 @@
 <main>
     <div class="container">
         <div class="row">
-            <div class="col-xl-4">
-                <!-- Profile picture card-->
-                <div class="card">
-                    <div class="card-header">Profile Picture</div>
-                    <div class="card-body text-center">
-                        <!-- Profile picture image-->
-                        <img class="img-account-profile rounded-circle mb-2" src="{{user.image}}"
-                            style="height: 10rem;" alt="">
-                        <!-- Profile picture help block-->
-                        <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
-                        <!-- Profile picture upload button-->
-                        <button class="btn btn-primary" type="button">Upload new image</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-8">
+            <div class="col-xl">
                 <!-- Account details card-->
                 <div class="card mb-4">
                     <div class="card-header">Cập nhật hồ sơ</div>
                     <div class="card-body">
                         <form method="POST" action="/users/{{user._id}}?_method=PUT">
+                            <div class="text-center">
+                                <!-- Profile picture image-->
+                                <img id="myimage" class="img-account-profile rounded-circle mb-2" src="{{user.image}}"
+                                    style="height: 10rem;" alt="">
+                                <!-- Profile picture help block-->
+                                <div class="small font-italic text-muted mb-4">Ảnh JPG không quá 2MB</div>
+                                <!-- Profile picture upload button-->
+                                <input type="file" name="avatar" id="file" style="display:none;" onchange="onFileSelected(event)" multiple />
+                                <button type="button" class="btn btn-primary" id="button"
+                                    onclick="thisFileUpload();">Tải ảnh lên</button>
+                            </div>
                             <!-- Form Group (name)-->
                             <div class="form-group">
                                 <label class="small mb-1" for="inputUsername">Họ và tên</label>
@@ -68,3 +64,22 @@
         </div>
     </div>
 </main>
+
+<script>
+    function thisFileUpload() {
+        document.getElementById("file").click();
+    };
+    function onFileSelected(event) {
+        var selectedFile = event.target.files[0];
+        var reader = new FileReader();
+
+        var imgtag = document.getElementById("myimage");
+        imgtag.title = selectedFile.name;
+
+        reader.onload = function (event) {
+            imgtag.src = event.target.result;
+        };
+
+        reader.readAsDataURL(selectedFile);
+    }
+</script>
