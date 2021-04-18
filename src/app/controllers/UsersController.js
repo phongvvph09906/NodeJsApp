@@ -47,7 +47,25 @@ class UsersController {
 
     // [PUT] /users/:id
     update(req, res, next) {
-        User.updateOne({ _id: req.params.id }, req.body)
+        const files = req.files;
+        console.log(files);
+        var paths = [];
+        if (files) {
+            for (var i = 0; i < files.length; i++) {
+                var path = files[i].path.split("\\").slice(2).join("\\")
+                paths.push(path)
+                console.log(path);
+            }
+        }
+        console.log(paths);
+        User.updateOne({ _id: req.params.id }, 
+            {   name: req.body.name,
+                image: paths,
+                birthday: req.body.birthday,
+                email: req.body.email,
+                gender: req.body.gender,
+                hobby: req.body.hobby,
+                description: req.body.description})
             .then(() => res.redirect('/users'))
             .catch(next);
     }
@@ -70,21 +88,14 @@ class UsersController {
                 for (var i = 0; i < files.length; i++) {
                     var path = files[i].path.split("\\").slice(2).join("\\")
                     paths.push(path)
-                    if(i != files.length -1) {
-                        // paths += path + ", "
-                        
-                    } else {
-                        // paths += path
-                    }
-                    
                 }
-            
-               
             }
+            console.log(paths);
             const user = await new User({
                 name: req.body.name,
                 image: paths,
                 birthday: req.body.birthday,
+                email: req.body.email,
                 gender: req.body.gender,
                 hobby: req.body.hobby,
                 description: req.body.description,
@@ -101,16 +112,13 @@ class UsersController {
 
     }
 
-    // [POST] /users/profile
-    profile(req, res, next) {
-        res.json({ status: 'ok' })
-    }
-
     // [GET] /users/:slug
     show(req, res, next) {
         User.find({})
             .then(users => {
-                res.render('users/show', {
+                res
+                // .json(users);
+                .render('users/show', {
                     isAuthenticated: true,
                     users: multipleMongooseToObject(users) 
                 })

@@ -95,7 +95,21 @@ router.post('/store', function (req, res, next) {
 }, usersController.store);
 
 router.get('/:id/edit', usersController.edit);
-router.put('/:id', usersController.update);
+router.put('/:id', function (req, res, next) {
+    upload(req, res, function (err) {
+        if (req.fileValidationError) {
+            res.json({error: req.fileValidationError});
+        }
+        if (err instanceof multer.MulterError) {
+            res.json(err.message);
+        } else if (err) {
+            // An unknown error occurred when uploading.
+            res.json(err.message);
+        }
+        // Everything went fine.
+        next();
+    })
+}, usersController.update);
 router.delete('/:id', usersController.delete);
 router.get('/', usersController.show);
 

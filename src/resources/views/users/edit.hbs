@@ -6,11 +6,14 @@
                 <div class="card mb-4">
                     <div class="card-header">Cập nhật hồ sơ</div>
                     <div class="card-body">
-                        <form method="POST" action="/users/{{user._id}}?_method=PUT">
+                        <form method="POST" action="/users/{{user._id}}?_method=PUT" enctype="multipart/form-data">
                             <div class="text-center">
                                 <!-- Profile picture image-->
-                                <img id="myimage" class="img-account-profile rounded-circle mb-2" src="{{user.image}}"
+                                {{#each user.image}}
+                                    <img id="myimage" class="img-account-profile rounded-circle mb-2" src="{{this}}"
                                     style="height: 10rem;" alt="">
+                                {{/each}}
+                                
                                 <!-- Profile picture help block-->
                                 <div class="small font-italic text-muted mb-4">Ảnh JPG không quá 2MB</div>
                                 <!-- Profile picture upload button-->
