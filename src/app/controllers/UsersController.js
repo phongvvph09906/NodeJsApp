@@ -51,11 +51,10 @@ class UsersController {
         var paths = [];
         if (files) {
             for (var i = 0; i < files.length; i++) {
-                var path = files[i].path.split("\\").slice(2).join("\\")
-                paths.push(path)
+                var imagePath = files[i].path.split("\\").slice(2).join("\\")
+                paths.push(imagePath)
             }
         }
-        console.log(paths);
         User.updateOne({ _id: req.params.id }, 
             {   name: req.body.name,
                 image: paths,
@@ -82,18 +81,16 @@ class UsersController {
         var paths = [];
         const errors = validationResult(req);
         if (errors.isEmpty()) {
-            // if (files) {
-            //     for (var i = 0; i < files.length; i++) {
-            //         var path = files[i].path.split("\\").slice(2).join("\\")
-            //         paths.push(path)
-            //     }
-            // }
+            if (files) {
+                for (var i = 0; i < files.length; i++) {
+                    var imagePath = req.file.path.split("\\").slice(2).join("\\")
+                    paths.push(imagePath)
+                }
+            }
             
-            var imagePath = req.file.path.split("\\").slice(2).join("\\")
-            console.log(imagePath);
             const user = await new User({
                 name: req.body.name,
-                image: imagePath,
+                image: paths,
                 birthday: req.body.birthday,
                 email: req.body.email,
                 gender: req.body.gender,
