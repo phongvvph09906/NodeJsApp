@@ -76,7 +76,7 @@ var upload = multer({
         // fileSize: maxSize,
         files: maxFiles,
     }
-}).array('avatar')
+}).single('avatar')
 
 router.post('/store', function (req, res, next) {
     upload(req, res, function (err) {

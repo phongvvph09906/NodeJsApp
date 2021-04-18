@@ -48,13 +48,11 @@ class UsersController {
     // [PUT] /users/:id
     update(req, res, next) {
         const files = req.files;
-        console.log(files);
         var paths = [];
         if (files) {
             for (var i = 0; i < files.length; i++) {
                 var path = files[i].path.split("\\").slice(2).join("\\")
                 paths.push(path)
-                console.log(path);
             }
         }
         console.log(paths);
@@ -80,20 +78,22 @@ class UsersController {
     // [POST] /users/store
     async store(req, res, next) {
         // Khởi tạo biến files để lưu thông tin của array 
-        const files = req.files;
+        const files = req.file;
         var paths = [];
         const errors = validationResult(req);
         if (errors.isEmpty()) {
-            if (files) {
-                for (var i = 0; i < files.length; i++) {
-                    var path = files[i].path.split("\\").slice(2).join("\\")
-                    paths.push(path)
-                }
-            }
-            console.log(paths);
+            // if (files) {
+            //     for (var i = 0; i < files.length; i++) {
+            //         var path = files[i].path.split("\\").slice(2).join("\\")
+            //         paths.push(path)
+            //     }
+            // }
+            
+            var imagePath = req.file.path.split("\\").slice(2).join("\\")
+            console.log(imagePath);
             const user = await new User({
                 name: req.body.name,
-                image: paths,
+                image: imagePath,
                 birthday: req.body.birthday,
                 email: req.body.email,
                 gender: req.body.gender,
