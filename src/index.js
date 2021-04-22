@@ -21,7 +21,10 @@ app.use(methodOverride('_method'))
 // Template engine
 // Config default directory for views
 app.engine('.hbs', handlebars({
-  extname: '.hbs'
+  extname: '.hbs',
+  helpers: {
+    binaryToImage: (binary) => binary.toString('base64')
+  }
 }));
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'resources', 'views'));

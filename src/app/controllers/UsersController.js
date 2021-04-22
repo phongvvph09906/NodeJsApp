@@ -1,6 +1,6 @@
 const User = require('../models/User');
 const { mongooseToObject, multipleMongooseToObject } = require('../../until/mongoose');
-
+const fs = require('fs');
 const { validationResult } = require('express-validator');
 
 class UsersController {
@@ -36,35 +36,69 @@ class UsersController {
     // [GET] /users/:id/edit
     edit(req, res, next) {
         User.findById(req.params.id)
-            .then((user) =>
-                res.render('users/edit', {
-                    user: mongooseToObject(user),
-                    isAuthenticated: true
-                }),
+            .then((user) => {
+                var type = '';
+                try {
+                    type = req.query.type;
+                } catch (e) {
+                }
+                if (type == 'json') {
+                    res.json(user)
+                } else {
+                    res.render('users/edit', {
+                        user: mongooseToObject(user),
+                        isAuthenticated: true
+                    })
+                }
+            }
             )
             .catch(next);
     }
 
     // [PUT] /users/:id
-    update(req, res, next) {
-        const files = req.files;
-        var paths = [];
-        if (files) {
-            for (var i = 0; i < files.length; i++) {
-                var imagePath = files[i].path.split("\\").slice(2).join("\\")
-                paths.push(imagePath)
+    async update(req, res, next) {
+        var data = req.body.data;
+        if (data != null) {
+            await User.updateOne({ _id: data.id },
+                {
+                    name: data.name,
+                    birthday: data.birthday,
+                    email: data.email,
+                    gender: data.gender,
+                    hobby: data.hobby,
+                    description: data.description
+                });
+        } else {
+            if (req.file == null) {
+                User.updateOne({ _id: req.params.id },
+                    {
+                        name: req.body.name,
+                        birthday: req.body.birthday,
+                        email: req.body.email,
+                        gender: req.body.gender,
+                        hobby: req.body.hobby,
+                        description: req.body.description
+                    })
+                    .then(() => res.redirect('/users'))
+                    .catch(next);
+            } else {
+                var filePath = req.file.path.split('\\').slice(2).join('\\')
+                User.updateOne({ _id: req.params.id },
+                    {
+                        name: req.body.name,
+                        image: filePath,
+                        birthday: req.body.birthday,
+                        email: req.body.email,
+                        gender: req.body.gender,
+                        hobby: req.body.hobby,
+                        description: req.body.description
+                    })
+                    .then(() => res.redirect('/users'))
+                    .catch(next);
             }
         }
-        User.updateOne({ _id: req.params.id }, 
-            {   name: req.body.name,
-                image: paths,
-                birthday: req.body.birthday,
-                email: req.body.email,
-                gender: req.body.gender,
-                hobby: req.body.hobby,
-                description: req.body.description})
-            .then(() => res.redirect('/users'))
-            .catch(next);
+        
+
     }
 
     // [DELETE] /users/:id
@@ -76,36 +110,66 @@ class UsersController {
 
     // [POST] /users/store
     async store(req, res, next) {
-        // Khởi tạo biến files để lưu thông tin của array 
-        const files = req.file;
-        var paths = [];
-        const errors = validationResult(req);
-        if (errors.isEmpty()) {
-            if (files) {
-                for (var i = 0; i < files.length; i++) {
-                    var imagePath = req.file.path.split("\\").slice(2).join("\\")
-                    paths.push(imagePath)
+        var data = req.body.data;
+        if (data != null) {
+            const user = await new User({
+                name: data.name,
+                birthday: data.birthday,
+                birthday: data.gender,
+                hobby: data.hobby,
+                description: data.description,
+            });
+            console.log(user);
+            user.save(function (err) {
+                if (err) return handleError(err);
+            });
+        } else {
+            if (req.file == null) {
+                const errors = validationResult(req);
+                if (errors.isEmpty()) {
+                    const user = await new User({
+                        name: req.body.name,
+                        birthday: req.body.birthday,
+                        password: req.body.password,
+                        email: req.body.email,
+                        gender: req.body.gender,
+                        hobby: req.body.hobby,
+                        description: req.body.description,
+                    });
+    
+                    user.save()
+                        .then(() => res.redirect('/users'))
+                        .catch(next);
+                } else {
+                    return res.render('users/register', {
+                        errors: errors.array()
+                    });
+                }
+            } else {
+                const errors = validationResult(req);
+                if (errors.isEmpty()) {
+                    var filePath = req.file.path.split('\\').slice(2).join('\\')
+                    const user = await new User({
+                        name: req.body.name,
+                        image: filePath,
+                        birthday: req.body.birthday,
+                        email: req.body.email,
+                        gender: req.body.gender,
+                        hobby: req.body.hobby,
+                        description: req.body.description,
+                    });
+    
+                    user.save()
+                        .then(() => res.redirect('/users'))
+                        .catch(next);
+                } else {
+                    return res.render('users/register', {
+                        errors: errors.array()
+                    });
                 }
             }
-            
-            const user = await new User({
-                name: req.body.name,
-                image: paths,
-                birthday: req.body.birthday,
-                email: req.body.email,
-                gender: req.body.gender,
-                hobby: req.body.hobby,
-                description: req.body.description,
-            });
-            
-            user.save()
-                .then(() => res.redirect('/users'))
-                .catch(next);
-        } else {
-            return res.render('users/register', {
-                errors: errors.array()
-            });
         }
+        
 
     }
 
@@ -113,12 +177,20 @@ class UsersController {
     show(req, res, next) {
         User.find({})
             .then(users => {
-                res
-                // .json(users);
-                .render('users/show', {
-                    isAuthenticated: true,
-                    users: multipleMongooseToObject(users) 
-                })
+                var type = '';
+                try {
+                    type = req.query.type;
+                } catch (e) {
+                }
+                if (type == 'json') {
+                    res.json(users)
+                } else {
+                    res.render('users/show', {
+                        isAuthenticated: true,
+                        users: multipleMongooseToObject(users)
+                    })
+                }
+
             })
             .catch(next);
     }

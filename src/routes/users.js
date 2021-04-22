@@ -56,9 +56,7 @@ var storage = multer.diskStorage({
         cb(null, './src/public/img/')
     },
     filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-        const { originalname } = file;
-        cb(null, originalname)
+        cb(null, Date.now() + path.extname(file.originalname))
     }
 })
 // Tối đa 5 file, mỗi file 2MB
